@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Proctoring Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Proctoring Service Test</h1>
+    
+    <div id="status">Checking...</div>
+    
+    <button onclick="testHealth()">Test Health</button>
+    <button onclick="testCamera()">Test Camera</button>
+    <button onclick="testVideo()">Test Video Feed</button>
+    
+    <div id="result" style="margin-top: 20px;"></div>
+    
+    <script>
+        const PROCTORING_URL = 'http://localhost:5001';
+        
+        async function testHealth() {
+            try {
+                const response = await fetch(`${PROCTORING_URL}/health`);
+                const data = await response.json();
+                document.getElementById('result').innerHTML = 
+                    '<div class="success">✅ Service running: ' + JSON.stringify(data) + '</div>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<div class="error">❌ Error: ' + error.message + '</div>';
+            }
+        }
+        
+        async function testCamera() {
+            try {
+                const response = await fetch(`${PROCTORING_URL}/check-camera`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                document.getElementById('result').innerHTML = 
+                    '<div class="success">✅ Camera check: ' + JSON.stringify(data) + '</div>';
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    '<div class="error">❌ Error: ' + error.message + '</div>';
+            }
+        }
+        
+        function testVideo() {
+            const videoUrl = `${PROCTORING_URL}/video-feed/test`;
+            document.getElementById('result').innerHTML = 
+                '<div>Video feed: <img src="' + videoUrl + '" style="width: 320px; height: 240px; border: 1px solid black;"></div>';
+        }
+        
+        testHealth();
+    </script>
+</body>
+</html>

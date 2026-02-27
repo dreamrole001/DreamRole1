@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: jobera-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: SatEj@123
+      MYSQL_DATABASE: JobEra09
+    ports:
+      - "3336:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - jobera-network
+    restart: unless-stopped
+
+  spring-backend:
+    build: ./backend
+    container_name: jobera-backend
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/JobEra09
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: SatEj@123
+    ports:
+      - "8080:8080"
+    networks:
+      - jobera-network
+    volumes:
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
+
+  proctoring-service:
+    build: ./camera-proctoring
+    container_name: jobera-proctoring
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./violations:/app/violations
+    devices:
+      - "/dev/video0:/dev/video0"
+    networks:
+      - jobera-network
+    restart: unless-stopped
+
+  react-frontend:
+    build: ./frontend
+    container_name: jobera-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:8080/api
+      REACT_APP_PROCTORING_URL: http://localhost:5001
+    depends_on:
+      - spring-backend
+      - proctoring-service
+    networks:
+      - jobera-network
+    restart: unless-stopped
+
+volumes:
+  mysql-data:
+
+networks:
+  jobera-network:
+    driver: bridge

@@ -1,0 +1,8 @@
+# Compatible with Python 3.13
+Flask==2.3.3
+Flask-CORS==4.0.0
+opencv-python==4.9.0.80
+opencv-contrib-python==4.9.0.80
+numpy==1.26.3
+requests==2.31.0
+Pillow==10.2.0
