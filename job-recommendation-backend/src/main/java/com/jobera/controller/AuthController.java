@@ -19,7 +19,6 @@ import com.jobera.service.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class AuthController {
     
     // Constants for repeated strings
