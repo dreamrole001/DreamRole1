@@ -19,7 +19,6 @@ import com.jobera.service.JobRecommendationService;
 
 @RestController
 @RequestMapping("/api/jobs")
-@CrossOrigin(origins = "http://localhost:3000")
 public class JobController {
     
     private final JobPostingService jobPostingService;
