@@ -25,6 +25,41 @@ import ResumeUpload from './pages/ResumeUpload';
 import RecruiterRegister from './pages/RecruiterRegister';
 import RecruiterDashboard from './pages/RecruiterDashboard';
 
+
+function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const DEMO_MODE = true;
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (DEMO_MODE) {
+        const demoUser = {
+          id: 999,
+          email: "demo@dreamrole.com",
+          fullName: "Demo User",
+          phone: "9999999999",
+          role: "ROLE_USER"
+        };
+        setUser(demoUser);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const currentUser = await authService.checkAuth();
+        setUser(currentUser);
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
